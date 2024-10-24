@@ -1,0 +1,6 @@
+@EnableJwtBearerInSwagger_HostAddress = http://localhost:5007
+
+GET {{EnableJwtBearerInSwagger_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

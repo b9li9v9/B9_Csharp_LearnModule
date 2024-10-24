@@ -1,0 +1,48 @@
+out 
+in
+
+IActionResult
+CustomPolicy
+
+部署DB、Identity
+
+配置appsettings.json
+
+设置Permissions常量
+
+部署Seed DB
+
+注入、定义Authentication身份验证方案、 注入、定义AddJwtBearer用于配置 JWT（JSON Web Token）身份验证
+
+定义授权requirement
+定义授权handler
+定义授权PolicyProvider
+
+注入、定义Autherzation用于配置授权策略。
+
+生成JWT
+
+-------------------------------------------
+
+意思就是说[Authorize(Policy = "Permissions.Users.Read")] // 使用动态生成的权限策略，，这行代码会调用PermissionPolicyProvider或者是继承了AuthorizeAttribute特性的类吗
+ChatGPT 说：
+ChatGPT
+是的，您的理解是正确的。
+
+具体流程
+调用 [Authorize] 属性:
+
+当在控制器或操作方法上使用 [Authorize(Policy = "Permissions.Users.Read")] 属性时，ASP.NET Core 会在处理请求时检查这个属性。
+查找授权策略:
+
+ASP.NET Core 会使用已注册的 IAuthorizationPolicyProvider，即在这个例子中是 PermissionPolicyProvider，来查找名为 "Permissions.Users.Read" 的授权策略。
+调用 PermissionPolicyProvider:
+
+PermissionPolicyProvider 的 GetPolicyAsync 方法会被调用。
+如果策略名称以 AppClaim.Permission 开头，PermissionPolicyProvider 会生成一个新的 AuthorizationPolicy，并将 PermissionRequirement 添加到该策略中。
+授权处理:
+
+一旦策略生成并返回，ASP.NET Core 会执行与该策略相关的所有授权处理器（如 PermissionHandler）。
+PermissionHandler 将检查当前用户是否具有所需的权限声明。
+总结
+所以，当你使用 [Authorize(Policy = "Permissions.Users.Read")] 时，确实会触发 PermissionPolicyProvider 来生成和返回相应的授权策略，进而进行权限验证。这一流程确保了只有满足权限要求的用户才能访问被保护的资源。
